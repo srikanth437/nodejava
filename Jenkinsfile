@@ -5,6 +5,8 @@ pipeline {
             steps {
 
                 script {
+                    //env.ECRREPOURI = "565057454984.dkr.ecr.ap-south-1.amazonaws.com/med-admin"
+                    //env.DOCKERPUSHURL = "https://565057454984.dkr.ecr.ap-south-1.amazonaws.com/med-admin"
                     registry = "srikanth437/test-deploy"
                     registryCredential = 'dockerhub-creds'
                     env.TAG = "test-" + "${BUILD_NUMBER}"
@@ -13,14 +15,6 @@ pipeline {
                 } //script end           
             } //steps end
         } // env Variables stage end
-
-        stage("git clone")
-            {
-                steps {
-                     git changelog: false, credentialsId: 'github-creds', poll: false, url: 'https://github.com/srikanth437/nodejava'
-                }
-               
-            }
         
         stage("Docker build") {
             steps {
