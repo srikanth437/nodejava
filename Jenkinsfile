@@ -50,7 +50,7 @@ pipeline {
                script{                 
                         withKubeConfig(caCertificate: '', clusterName: 'test-development', contextName: '', credentialsId: 'kubernetes-service-account-token', namespace: '', serverUrl: 'https://A5883926147CA7BC33F63A3D3EBA596E.gr7.us-east-2.eks.amazonaws.com') {
                         //sh "kubectl apply -f ${WORKSPACE}/${env.FILENAME}"
-                        sh "kubectl apply -f env.FILENAME -n default"
+                        sh "kubectl apply -f ${env.FILENAME} -n default"
                         sh "kubectl get pods -n default"
                      }  // withKubeConfig end 
                     
