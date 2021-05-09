@@ -5,8 +5,6 @@ pipeline {
             steps {
 
                 script {
-                    //env.ECRREPOURI = "565057454984.dkr.ecr.ap-south-1.amazonaws.com/med-admin"
-                    //env.DOCKERPUSHURL = "https://565057454984.dkr.ecr.ap-south-1.amazonaws.com/med-admin"
                     registry = "srikanth437/test-deploy"
                     registryCredential = 'dockerhub-creds'
                     env.TAG = "test-" + "${BUILD_NUMBER}"
@@ -15,6 +13,14 @@ pipeline {
                 } //script end           
             } //steps end
         } // env Variables stage end
+
+        stage("git clone")
+            {
+                steps {
+                     git changelog: false, credentialsId: 'github-creds', poll: false, url: 'https://github.com/srikanth437/nodejava'
+                }
+               
+            }
         
         stage("Docker build") {
             steps {
@@ -29,8 +35,8 @@ pipeline {
               {
                 script { 
 
-                    docker.withRegistry( 'srikanth437/test-deploy' , registryCredential ) { 
-
+                    //docker.withRegistry( 'https://registry.hub.docker.com' , registryCredential ) { 
+                        withDockerRegistry([ credentialsId: "dockerhub-creds", url: "" ]) {
                         sh "docker push ${env.IMAGE}"
                     }
                 }
@@ -50,7 +56,8 @@ pipeline {
                script{                 
                         withKubeConfig(caCertificate: '', clusterName: 'test-development', contextName: '', credentialsId: 'kubernetes-service-account-token', namespace: '', serverUrl: 'https://A5883926147CA7BC33F63A3D3EBA596E.gr7.us-east-2.eks.amazonaws.com') {
                         //sh "kubectl apply -f ${WORKSPACE}/${env.FILENAME}"
-                        sh "kubectl get svc -n default"
+                        sh "kubectl apply -f env.FILENAME -n default"
+                        sh "kubectl get pods -n default"
                      }  // withKubeConfig end 
                     
                 } //script end
