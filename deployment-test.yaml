@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-deployment-app
+  template:
+    metadata:
+      labels:
+        app: test-deployment-app
+    spec:
+      containers:
+      - name: test-deployment
+        image: CONTAINER_IMAGE
+        ports:
+        - containerPort: 3000
